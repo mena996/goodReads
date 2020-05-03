@@ -1,0 +1,26 @@
+{
+  "name": "goodreaders",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mena996/goodReaders.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mena996/goodReaders/issues"
+  },
+  "homepage": "https://github.com/mena996/goodReaders#readme",
+  "dependencies": {
+    "cores": "^0.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.11",
+    "mongose": "0.0.2-security",
+    "router": "^1.3.5"
+  }
+}
