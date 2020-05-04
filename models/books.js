@@ -16,4 +16,4 @@ BookSchema.pre('save', async function () {
         });
 });
 const bookModel = mongoose.model('Book', BookSchema);
-module.exports = postModel;
+module.exports = bookModel;
