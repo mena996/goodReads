@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true, minlength: 4 },
     image: { type: String, required: false},
     isadmin: { type: Boolean, required: true, minlength: 4 },
-    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
 })
 userSchema.pre('save',async function(){
     this.password=bcrypt.hashSync(this.password, 10);
