@@ -1,0 +1,132 @@
+#################################################################
+###                       Author Routes
+#################################################################
+POST http://localhost:5000/authors/ HTTP/1.1
+content-type: application/json
+
+{
+	"firstName": "ahmed",
+	"lastName": "mohamed",
+	"birthDate": "1999-03-03",
+	"image": "img.png"
+}
+
+###
+PATCH  http://localhost:5000/authors/5eb01e1ddf9c7aa167b59d53  HTTP/1.1
+content-type: application/json
+
+{
+	"firstName": "mostafa",
+	"lastName": "ali",
+	"birthDate": "1994-12-30",
+	"image": "img2.png"
+}
+
+### 
+Delete http://localhost:5000/authors/5eb01e1ddf9c7aa167b59d53 HTTP/1.1
+
+#################################################################
+###                       Category Routes
+#################################################################
+POST http://localhost:5000/categories/ HTTP/1.1
+content-type: application/json
+
+{
+	"name": "cat1",
+}
+
+###
+PATCH  http://localhost:5000/categories/5eb01e1ddf9c7aa167b59d53  HTTP/1.1
+content-type: application/json
+
+{
+	"name": "cat2",
+}
+
+### 
+Delete http://localhost:5000/categories/5eb01e1ddf9c7aa167b59d53 HTTP/1.1
+
+#################################################################
+###                         Books Routes
+#################################################################
+POST http://localhost:5000/books/ HTTP/1.1
+content-type: application/json
+
+{
+	"name": "book1",
+	"image": "sdfw",
+	"category": "5eb0130cf23ee398ff1dd164",
+	"author": "5eb01302f23ee398ff1dd163"
+}
+
+###
+PATCH  http://localhost:5000/books/5eb01e1ddf9c7aa167b59d53  HTTP/1.1
+content-type: application/json
+
+{
+	"name": "book2",
+	"image": "sdvwsdvwecwew",
+	"category": "5eb0130cf23ee398ff1dd164",
+	"author": "5eb01302f23ee398ff1dd163"
+}
+
+### 
+Delete http://localhost:5000/books/5eb01e1ddf9c7aa167b59d53 HTTP/1.1
+#################################################################
+###                         User Routes
+#################################################################
+POST http://localhost:5000/users/ HTTP/1.1
+content-type: application/json
+
+{
+	"firstName": "mohamed",
+    "lastName": "tarek",
+    "username": "mtarek",
+    "email": "m@m.com",
+    "password": "1234",
+    "isadmin": true
+}
+
+###
+PATCH  http://localhost:5000/users/5eb01e1ddf9c7aa167b59d53  HTTP/1.1
+content-type: application/json
+
+{
+	"name": "book2",
+	"image": "sdvwsdvwecwew",
+	"category": "5eb0130cf23ee398ff1dd164",
+	"author": "5eb01302f23ee398ff1dd163"
+}
+
+### 
+Delete http://localhost:5000/users/5eb01e1ddf9c7aa167b59d53 HTTP/1.1
+
+### login
+POST http://localhost:5000/users/login HTTP/1.1
+content-type: application/json
+
+{
+    "username": "mtarek",
+    "password": "1234"
+}
+### Check Token
+POST http://localhost:5000/users/check HTTP/1.1
+content-type: application/json
+
+{
+    "token": ""
+}
+### Generate new Access Token
+POST http://localhost:5000/users/token HTTP/1.1
+content-type: application/json
+
+{
+    "refreshToken": ""
+}
+### Log out
+DELETE http://localhost:5000/users/logout HTTP/1.1
+content-type: application/json
+
+{
+    "refreshToken": ""
+}

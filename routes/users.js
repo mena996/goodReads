@@ -1,9 +1,9 @@
-// const express = require('express');
-// let UserModel = require('../models/users');
-// const PostModel = require('../models/posts');
-// const bcrypt = require('bcrypt');
+const express = require('express');
+let UserModel = require('../models/users');
+const bcrypt = require('bcrypt');
+const auth = require('./auth')
+const router = express.Router();
 
-// const router = express.Router();
 // router.get('/', (req, res) => {
 //     return UserModel.find({}).populate('posts', ['title', 'body']).exec((err, users) => {
 //         if (err) return res.send(err);
@@ -55,8 +55,17 @@
 //         res.json(users);
 //     });
 // });
-// router.use((err, req, res, next) => {
-//     res.send("oh no there is some thing wrong happend :( \n" + err);
-// });
 
-// module.exports = router;
+router.post('/login', auth.logIn);
+router.post('/token', auth.regenerateAccessToken);
+// router.post('/check', auth.authenticateToken);
+router.delete('/logout', auth.logOut);
+
+
+
+
+router.use((err, req, res, next) => {
+    res.send("oh no there is some thing wrong happend :( \n" + err);
+});
+
+module.exports = router;
