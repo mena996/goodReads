@@ -9,7 +9,7 @@ const BookSchema = new mongoose.Schema({
 BookSchema.pre('save', async function () {
     UserModel.updateOne(
         { _id: this.auther_id },
-        { $push: { posts: this.id } },
+        { $push: { books: this.id } },
         (err) => {
             if (err)
                 console.log(err);

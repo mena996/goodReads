@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
+const AutherSchema = new mongoose.Schema({
     firstName: { type: String, required: true, minlength: 2 },
     lastName: { type: String, required: true, minlength: 2 },
     birthdate: { type: String, required: true, unique: true, match: /.+@.+\..+/ },
@@ -8,5 +8,5 @@ const UserSchema = new mongoose.Schema({
     books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
 })
 
-const userModel = mongoose.model('User', UserSchema);
-module.exports = userModel;
+const autherModel = mongoose.model('Auther', AutherSchema);
+module.exports = autherModel;

@@ -1,11 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const userRouter = require('./routes/users');
-const postRouter = require('./routes/posts');
+// const userRouter = require('./routes/users');
+// const postRouter = require('./routes/posts');
 
 const port = process.env.port || 5000;
 const app = express();
-mongoose.connect('mongodb://localhost:27017/blogs', {
+mongoose.connect('mongodb://localhost:27017/goodReaders', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (err) => {
@@ -15,19 +15,20 @@ mongoose.connect('mongodb://localhost:27017/blogs', {
         console.log(err);
     }
 });
-mongoose.set('useFindAndModify', false);
 
+mongoose.set('useFindAndModify', false);
 app.use(express.json());
 
 app.use((req, res, next) => {
     console.log(new Date(),req.method,req.url);
     next();
 });
-app.use('/users', userRouter);
-app.use('/posts', postRouter);
+// app.use('/users', userRouter);
+// app.use('/posts', postRouter);
+
 app.get('/', (req, res, next) => {
     res.send('HELLO iam the root path');
-    next('sdfghjklsdfghjk');
+    next('error statment');
 });
 
 app.use((err, req, res, next) => {
