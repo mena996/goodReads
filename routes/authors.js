@@ -8,12 +8,14 @@ const router = express.Router();
 //         res.json(posts);
 //     });
 // });
-// router.get('/:id', (req, res, next) => {
-//     return PostModel.findById(req.params.id).populate('auther_id', ['firstName', 'lastName']).exec((err, posts) => {
-//         if (err) next(err);
-//         res.json(posts);
-//     });
-// });
+router.get('/:id', (req, res, next) => {
+    return AuthorModel.findById(req.params.id).populate('books').exec((err, author) => {
+        if (err) next(err);
+        res.json(author);
+    });
+});
+
+
 router.post('/', async(req, res, next) => {
     try {
         const { firstName, lastName, birthDate, image, books } = req.body;

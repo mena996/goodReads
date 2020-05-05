@@ -37,6 +37,13 @@ router.get('/:id', async(req, res, next)=>{
       }
 });
 
+// router.get('/:id', (req, res, next) => {
+//     return BookModel.findById(req.params.id).populate('author').populate('category').exec((err, book) => {
+//         if (err) next(err);
+//         res.json(book);
+//     });
+// });
+
 router.post('/', async(req, res, next) => {
     try {
         const { name, image, category, author } = req.body;
