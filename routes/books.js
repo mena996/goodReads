@@ -19,9 +19,10 @@ const router = express.Router();
 
 router.get('/', async(req, res, next)=>{
     try {
-        const books = await BookModel.find({});
-        if (books) res.send(books);
-        else next(err)
+        const books = await BookModel.find({}).populate('author').populate('category')
+            if (books) res.send(books);
+            else next(err)
+        
       } catch (err) {
         next("couldent fetch books..");
       }
