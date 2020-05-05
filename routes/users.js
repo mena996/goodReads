@@ -56,6 +56,21 @@ const router = express.Router();
 //     });
 // });
 
+
+router.post('/', (req, res) => {
+    const { body: { firstName, lastName, username, email, password, image } } = req;
+    const user = new UserModel({
+        firstName, lastName, username, email, password, image, isadmin:0
+    })
+    user.save((err) => {
+        if (err)
+            return res.send(err);
+        res.json(user);
+    });
+});
+
+
+
 router.post('/login', auth.logIn);
 router.post('/token', auth.regenerateAccessToken);
 // router.post('/check', auth.authenticateToken);

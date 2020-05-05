@@ -5,13 +5,14 @@ const userRouter = require('./routes/users');
 const authorRouter = require('./routes/authors');
 const bookRouter = require('./routes/books');
 const categoryRouter = require('./routes/categories');
-
+const reviewRouter = require('./routes/reviews');
 
 const port = process.env.port || 5000;
 const app = express();
 mongoose.connect('mongodb://localhost:27017/goodReads', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
 }, (err) => {
     if (!err) {
         console.log('started conniction to mongodb');
@@ -31,7 +32,7 @@ app.use('/users', userRouter);
 app.use('/authors', authorRouter);
 app.use('/books', bookRouter);
 app.use('/categories', categoryRouter);
-
+app.use('/reviews', reviewRouter);
 
 app.get('/', (req, res, next) => {
     res.send('HELLO iam the root path');
