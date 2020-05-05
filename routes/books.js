@@ -10,12 +10,14 @@ const router = express.Router();
 //         res.json(posts);
 //     });
 // });
-// router.get('/:id', (req, res, next) => {
-//     return PostModel.findById(req.params.id).populate('auther_id', ['firstName', 'lastName']).exec((err, posts) => {
-//         if (err) next(err);
-//         res.json(posts);
-//     });
-// });
+router.get('/:id', (req, res, next) => {
+    return BookModel.findById(req.params.id).populate('author').populate('category').exec((err, book) => {
+        if (err) next(err);
+        res.json(book);
+    });
+});
+
+
 router.post('/', async(req, res, next) => {
     try {
         const { name, image, category, author } = req.body;
