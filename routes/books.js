@@ -5,10 +5,10 @@ const ShelvBooks = require('../models/shelvbooks');
 const router = express.Router();
 
 // router.get('/', (req, res, next) => {
-//     return BookModel.find({}).populate('book_id','name', 'image', 'category', 'author').exec((err, posts) => {
-//         if (err) return res.send(err);
-//         res.json(posts);
-//     });
+//     // return BookModel.find({}).populate('book_id','name', 'image', 'category', 'author').exec((err, posts) => {
+//     //     if (err) return res.send(err);
+//     //     res.json(posts);
+//     // });
 // });
 // router.get('/:id', (req, res, next) => {
 //     return PostModel.findById(req.params.id).populate('auther_id', ['firstName', 'lastName']).exec((err, posts) => {
@@ -16,6 +16,27 @@ const router = express.Router();
 //         res.json(posts);
 //     });
 // });
+
+router.get('/', async(req, res, next)=>{
+    try {
+        const books = await BookModel.find({});
+        if (books) res.send(books);
+        else next(err)
+      } catch (err) {
+        next("couldent fetch books..");
+      }
+});
+
+router.get('/:id', async(req, res, next)=>{
+    try {
+        const book = await BookModel.findById(req.params.id)
+            if (!book) next("Book Not found..");
+            else res.send(book);
+      } catch (err) {
+        next("Error fetching book..");
+      }
+});
+
 router.post('/', async(req, res, next) => {
     try {
         const { name, image, category, author } = req.body;

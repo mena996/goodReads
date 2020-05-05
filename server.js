@@ -11,7 +11,8 @@ const port = process.env.port || 5000;
 const app = express();
 mongoose.connect('mongodb://localhost:27017/goodReads', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
 }, (err) => {
     if (!err) {
         console.log('started conniction to mongodb');
