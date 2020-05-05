@@ -18,14 +18,14 @@ router.post('/', async(req, res, next) => {
     try {
         const { firstName, lastName, birthDate, image, books } = req.body;
         const author = await AuthorModel.create({
-            firstName, 
-            lastName, 
-            birthDate, 
-            image, 
+            firstName,
+            lastName,
+            birthDate,
+            image,
             books
         });
         res.send(author)
-    } catch{
+    } catch {
         next("Erorr while adding a author");
     }
 });
@@ -34,7 +34,7 @@ router.patch('/:id', async(req, res, next) => {
         const author = await AuthorModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         if (!author) next("author not found");
         else res.json(author);
-    } catch{
+    } catch {
         next("Error in editing author")
     }
 });
@@ -43,7 +43,7 @@ router.delete('/:id', async(req, res, next) => {
         const author = await AuthorModel.findByIdAndDelete(req.params.id);
         if (!author) next("author not found");
         else res.json(author);
-    } catch{
+    } catch {
         next("Error in removing author")
     }
 });
