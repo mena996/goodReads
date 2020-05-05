@@ -25,8 +25,8 @@ router.post('/', async(req, res, next) => {
             books
         });
         res.send(author)
-    } catch{
-        next("Erorr while adding a author");
+    } catch(err){
+        next(err);
     }
 });
 router.patch('/:id', async(req, res, next) => {
