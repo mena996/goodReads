@@ -10,12 +10,6 @@ const router = express.Router();
 //         res.json(posts);
 //     });
 // });
-router.get('/:id', (req, res, next) => {
-    return AuthorModel.findById(req.params.id).populate('books').exec((err, author) => {
-        if (err) next(err);
-        res.json(author);
-    });
-});
 
 //need hook
 // router.get('/:id/books', (req, res, next) => {
