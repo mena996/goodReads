@@ -38,12 +38,13 @@ router.get('/', async(req, res, next)=>{
 //       }
 // });
 
-router.get('/:id', (req, res, next) => {
-    return BookModel.findById(req.params.id).populate('author').populate('category').exec((err, book) => {
+router.get('/user/:id', (req, res, next) => {
+    return ShelvBooks.find({}).populate('user').populate('book').where('user').equals(req.params.id).exec((err, books) => {
         if (err) next(err);
-        res.json(book);
+        res.json(books);
     });
 });
+
 
 router.post('/', async(req, res, next) => {
     try {

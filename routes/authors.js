@@ -1,5 +1,7 @@
 const express = require('express');
 const AuthorModel = require('../models/authors');
+const BookModel = require('../models/books');
+
 const router = express.Router();
 
 // router.get('/', (req, res, next) => {
@@ -12,6 +14,22 @@ router.get('/:id', (req, res, next) => {
     return AuthorModel.findById(req.params.id).populate('books').exec((err, author) => {
         if (err) next(err);
         res.json(author);
+    });
+});
+
+//need hook
+// router.get('/:id/books', (req, res, next) => {
+//     return AuthorModel.findById(req.params.id).populate('books').exec((err, author) => {
+//         if (err) next(err);
+//         res.json(author);
+//     });
+// });
+
+// without hook
+router.get('/:id/books', (req, res, next) => {
+    return BookModel.find({}).populate('author').where('author').equals(req.params.id).exec((err, books) => {
+        if (err) next(err);
+        res.json(books);
     });
 });
 
