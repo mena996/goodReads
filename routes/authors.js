@@ -19,6 +19,20 @@ const router = express.Router();
 //     });
 // });
 
+router.get('/',(req, res, next) => {
+    return AuthorModel.find(req.params.id).populate(['firstName', 'lastName','image']).exec((err, authors) => {
+        if(err) next(err);
+        res.json(authors)
+    });
+});
+
+router.get('/:id',(req, res, next) => {
+    return AuthorModel.findById(req.params.id).populate(['firstName', 'lastName','birthDate','image','books']).exec((err, author) => {
+        if(err) next(err);
+        res.json(author);
+    });
+});
+
 // without hook
 router.get('/:id/books', (req, res, next) => {
     return BookModel.find({}).populate('author').where('author').equals(req.params.id).exec((err, books) => {
