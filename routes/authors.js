@@ -19,19 +19,30 @@ const router = express.Router();
 //     });
 // });
 
-router.get('/',(req, res, next) => {
-    return AuthorModel.find(req.params.id).populate(['firstName', 'lastName','image']).exec((err, authors) => {
-        if(err) next(err);
-        res.json(authors)
-    });
+router.get('/', async(req, res) => {
+    try{
+        const authors = await AuthorModel.find({}).populate('author');
+        res.json({
+            message: "List Authors",
+            data: authors
+        });
+    }catch(err){
+        return res.status(404).send({message : "whoops... we can't display authors something wrong."});
+    }
 });
 
-router.get('/:id',(req, res, next) => {
-    return AuthorModel.findById(req.params.id).populate(['firstName', 'lastName','birthDate','image','books']).exec((err, author) => {
-        if(err) next(err);
-        res.json(author);
-    });
+router.get('/:id', async(req, res) => {
+    try{
+        const author = await AuthorModel.findById(req.params.id);
+        res.json({
+            message: "author page",
+            data: author
+        });
+    }catch(err){
+        return res.status(404).send({message : "whoops... something wrong."});
+    }
 });
+
 
 // without hook
 router.get('/:id/books', (req, res, next) => {
