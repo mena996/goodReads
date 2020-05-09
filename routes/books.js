@@ -1,7 +1,7 @@
 const express = require('express');
 const BookModel = require('../models/books');
 const RateBookModel = require('../models/ratebooks');
-const ShelvBooks = require('../models/shelvbooks');
+const ShelvBookModel = require('../models/shelvbooks');
 const router = express.Router();
 
 // router.get('/', (req, res, next) => {
@@ -17,15 +17,15 @@ const router = express.Router();
 //     });
 // });
 
-router.get('/', async(req, res, next)=>{
+router.get('/', async (req, res, next) => {
     try {
         const books = await BookModel.find({}).populate('author').populate('category')
-            if (books) res.send(books);
-            else next(err)
-        
-      } catch (err) {
+        if (books) res.send(books);
+        else next(err)
+
+    } catch (err) {
         next("couldent fetch books..");
-      }
+    }
 });
 
 router.get('/:id', async(req, res, next)=>{
@@ -49,9 +49,9 @@ router.post('/', async(req, res, next) => {
     try {
         const { name, image, category, author } = req.body;
         const book = await BookModel.create({
-            name, 
-            image, 
-            category, 
+            name,
+            image,
+            category,
             author
         });
         res.send(book)
@@ -60,7 +60,7 @@ router.post('/', async(req, res, next) => {
     }
 });
 
-router.patch('/:id', async(req, res, next) => {
+router.patch('/:id', async (req, res, next) => {
     try {
         const book = await BookModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         if (!book) next("book not found");
@@ -70,7 +70,7 @@ router.patch('/:id', async(req, res, next) => {
     }
 });
 
-router.delete('/:id', async(req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
     try {
         const book = await BookModel.findByIdAndDelete(req.params.id);
         if (!book) next("book not found");
@@ -80,44 +80,67 @@ router.delete('/:id', async(req, res, next) => {
     }
 });
 
-router.post('/rate', async(req, res, next) => {
+router.post('/rate', async (req, res, next) => {
     try {
-        const { rate,user,book } = req.body;
-        options = { upsert: true, new: true, setDefaultsOnInsert: true }; 
-        bookRate=await RateBookModel.findOneAndUpdate({user,book},{ rate,user,book },options);
+        const { rate, user, book } = req.body;
+        options = { upsert: true, new: true, setDefaultsOnInsert: true };
+        bookRate = await RateBookModel.findOneAndUpdate({ user, book }, { rate, user, book }, options);
         res.send(bookRate)
-    } catch(err){
+    } catch (err) {
         next(err);
     }
 });
 
-router.post('/shelf', async(req, res, next) => {
+router.post('/shelf', async (req, res, next) => {
     try {
-        const { state,user,book } = req.body;
-        options = { upsert: true, new: true, setDefaultsOnInsert: true }; 
-        bookState=await ShelvBooks.findOneAndUpdate({user,book},{ state,user,book },options);
+        const { state, user, book } = req.body;
+        options = { upsert: true, new: true, setDefaultsOnInsert: true };
+        bookState = await ShelvBookModel.findOneAndUpdate({ user, book }, { state, user, book }, options);
         res.send(bookState)
-    } catch(err){
+    } catch (err) {
         next(err);
     }
 });
 
-router.get('/rate', async(req, res, next) => {
+router.get('/rate', async (req, res, next) => {
     try {
-        const {user,book } = req.body;
-        bookState=await ShelvBooks.find({user,book});
+        const { user, book } = req.body;
+        bookState = await RateBookModel.find({ user, book });
         res.send(bookState)
-    } catch(err){
+    } catch (err) {
         next(err);
     }
 });
 
-router.get('/shelf', async(req, res, next) => {
+router.get('/shelf', async (req, res, next) => {
     try {
-        const {user,book } = req.body;
-        bookState=await ShelvBooks.find({user,book});
+        const { user, book } = req.body;
+        bookState = await ShelvBookModel.find({ user, book });
         res.send(bookState)
-    } catch(err){
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.get('/topbooks', async (req, res, next) => {
+    try {
+        const { user, book } = req.body;
+        // bookState=await RateBookModel.find({}).populate('book').sort({rate: -1}).limit(5)
+
+        bookState = await RateBookModel.aggregate(
+            [
+                {
+                    $group:
+                    {
+                        _id: { "book": "$book", },
+                        rate: { $avg:"$rate" } ,
+                    }
+                }
+            ]
+        )
+
+        res.send(bookState)
+    } catch (err) {
         next(err);
     }
 });

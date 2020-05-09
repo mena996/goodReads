@@ -1,5 +1,7 @@
 const express = require('express');
 const AuthorModel = require('../models/authors');
+const BookModel = require('../models/books');
+
 const router = express.Router();
 
 // router.get('/', (req, res, next) => {
@@ -8,10 +10,45 @@ const router = express.Router();
 //         res.json(posts);
 //     });
 // });
-router.get('/:id', (req, res, next) => {
-    return AuthorModel.findById(req.params.id).populate('books').exec((err, author) => {
+
+//need hook
+// router.get('/:id/books', (req, res, next) => {
+//     return AuthorModel.findById(req.params.id).populate('books').exec((err, author) => {
+//         if (err) next(err);
+//         res.json(author);
+//     });
+// });
+
+router.get('/', async(req, res) => {
+    try{
+        const authors = await AuthorModel.find({}).populate('author');
+        res.json({
+            message: "List Authors",
+            data: authors
+        });
+    }catch(err){
+        return res.status(404).send({message : "whoops... we can't display authors something wrong."});
+    }
+});
+
+router.get('/:id', async(req, res) => {
+    try{
+        const author = await AuthorModel.findById(req.params.id);
+        res.json({
+            message: "author page",
+            data: author
+        });
+    }catch(err){
+        return res.status(404).send({message : "whoops... something wrong."});
+    }
+});
+
+
+// without hook
+router.get('/:id/books', (req, res, next) => {
+    return BookModel.find({}).populate('author').where('author').equals(req.params.id).exec((err, books) => {
         if (err) next(err);
-        res.json(author);
+        res.json(books);
     });
 });
 
@@ -20,15 +57,15 @@ router.post('/', async(req, res, next) => {
     try {
         const { firstName, lastName, birthDate, image, books } = req.body;
         const author = await AuthorModel.create({
-            firstName, 
-            lastName, 
-            birthDate, 
-            image, 
+            firstName,
+            lastName,
+            birthDate,
+            image,
             books
         });
         res.send(author)
-    } catch(err){
-        next(err);
+    } catch {
+        next("Erorr while adding a author");
     }
 });
 router.patch('/:id', async(req, res, next) => {
@@ -36,7 +73,7 @@ router.patch('/:id', async(req, res, next) => {
         const author = await AuthorModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         if (!author) next("author not found");
         else res.json(author);
-    } catch{
+    } catch {
         next("Error in editing author")
     }
 });
@@ -45,7 +82,7 @@ router.delete('/:id', async(req, res, next) => {
         const author = await AuthorModel.findByIdAndDelete(req.params.id);
         if (!author) next("author not found");
         else res.json(author);
-    } catch{
+    } catch {
         next("Error in removing author")
     }
 });
