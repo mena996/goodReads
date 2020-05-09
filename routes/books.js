@@ -28,22 +28,22 @@ router.get('/', async(req, res, next)=>{
       }
 });
 
-// router.get('/:id', async(req, res, next)=>{
-//     try {
-//         const book = await BookModel.findById(req.params.id)
-//             if (!book) next("Book Not found..");
-//             else res.send(book);
-//       } catch (err) {
-//         next("Error fetching book..");
-//       }
-// });
-
-router.get('/:id', (req, res, next) => {
-    return BookModel.findById(req.params.id).populate('author').populate('category').exec((err, book) => {
-        if (err) next(err);
-        res.json(book);
-    });
+router.get('/:id', async(req, res, next)=>{
+    try {
+        const book = await BookModel.findById(req.params.id).populate('author').populate('category')
+            if (!book) next("Book Not found..");
+            else res.send(book);
+      } catch (err) {
+        next("Error fetching book..");
+      }
 });
+
+// router.get('/:id', (req, res, next) => {
+//     return BookModel.findById(req.params.id).populate('author').populate('category').exec((err, book) => {
+//         if (err) next(err);
+//         res.json(book);
+//     });
+// });
 
 router.post('/', async(req, res, next) => {
     try {
