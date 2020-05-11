@@ -73,7 +73,7 @@ router.post('/', (req, res) => {
 
 router.post('/login', auth.logIn);
 router.post('/token', auth.regenerateAccessToken);
-// router.post('/check', auth.authenticateToken);
+router.post('/check', auth.authenticateToken);
 router.delete('/logout', auth.logOut);
 
 

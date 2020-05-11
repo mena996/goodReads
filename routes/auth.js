@@ -4,20 +4,22 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const logIn = async (req, res) => {
-    const { body: { username, password } } = req;
+    const { body: { username, password, isAdmin} } = req;
     const user = await UserModel.findOne({username});
-    if (!user) return res.status(400).send("Can't find a user with this username");
+    if (!user) return res.sendStatus(404);
     try {
         if (await bcrypt.compare(password,user.password)){
-            const accessToken = generateAccessToken(user);
-            const refreshToken = generateRefreshToken(user);
-            await RefreshTokens.create({ token: refreshToken })
-            res.json({accessToken, refreshToken});
+            const {password,_id,__v,isadmin,...userData} = user._doc
+            const accessToken = generateAccessToken(userData);
+            const refreshToken = generateRefreshToken(userData);
+            await RefreshTokens.create({ token: refreshToken });
+            (isAdmin && user.isadmin) ? res.status(201).json({accessToken, refreshToken}) : res.status(200).json({accessToken, refreshToken});
         }else{
-            res.send("wrong username/password combination");
+            res.sendStatus(401);
         }
-    } catch {
-        res.status(500).send();
+    } catch (e){
+        console.log(e)
+        res.sendStatus(500);
     }
 }
 
@@ -49,8 +51,8 @@ const authenticateToken = (req,res,next) => {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.status(403).send();
         req.user = user;
-        // res.json(user)
-        next(user);
+        res.json(user)
+        // next(user);
     })
 }
 
@@ -72,7 +74,8 @@ const logOut = async (req, res) => {
 
 
 module.exports = {
-	logIn,
+    logIn,
+    authenticateToken,
     regenerateAccessToken,
     logOut,
 }

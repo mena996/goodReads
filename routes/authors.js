@@ -22,10 +22,7 @@ const router = express.Router();
 router.get('/', async(req, res) => {
     try{
         const authors = await AuthorModel.find({}).populate('author');
-        res.json({
-            message: "List Authors",
-            data: authors
-        });
+        res.json(authors);
     }catch(err){
         return res.status(404).send({message : "whoops... we can't display authors something wrong."});
     }
