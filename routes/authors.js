@@ -43,9 +43,9 @@ router.get('/:id', async(req, res) => {
 
 // without hook
 router.get('/:id/books', (req, res, next) => {
-    return BookModel.find({}).populate('author').where('author').equals(req.params.id).exec((err, books) => {
+    return BookModel.find({}).populate('author').populate('category').where('author').equals(req.params.id).exec((err, books) => {
         if (err) next(err);
-        res.json(books);
+        else res.json(books);
     });
 });
 

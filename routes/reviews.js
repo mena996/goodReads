@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/', (req, res, next) => {
     return reviewModel.find({}).populate('book').populate('user').exec((err, review) => {
         if (err) next(err);
-        res.json(review);
+        else res.json(review);
     });
 });
 
@@ -15,7 +15,7 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
     return reviewModel.findById(req.params.id).populate('user').populate('book').exec((err, review) => {
         if (err) next(err);
-        res.json(review);
+        else res.json(review);
     });
 });
 
@@ -24,7 +24,7 @@ router.get('/:id', (req, res, next) => {
 router.post('/', (req, res, next) => {
     reviewModel.create(req.body, (err, doc) => {
         if (err) next(err);
-        res.json(doc);
+        else res.json(doc);
     })
 });
 
@@ -38,7 +38,7 @@ router.patch('/:id', (req, res, next) => {
     {new: true , runValidators: true},
     (err,review)=>{
         if(err) next(err);
-        res.json(review)
+        else res.json(review)
     })
 });
 
@@ -47,7 +47,7 @@ router.patch('/:id', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
     return reviewModel.findByIdAndDelete(req.params.id, (err, reviews) => {
         if (err) next(err);
-        res.json(reviews);
+        else res.json(reviews);
     });
 });
 
