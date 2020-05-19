@@ -122,6 +122,20 @@ router.get('/shelf', async (req, res, next) => {
     }
 });
 
+router.get('/shelf/:id', async (req, res) => {
+    try {
+        books = await ShelvBookModel.find({}).populate({
+            path:'book',
+            populate:{
+                path:'author'
+            }
+        });
+        res.send(books);
+    } catch (err) {
+        next(err);
+    }
+});
+
 router.get('/topbooks', async (req, res, next) => {
     try {
         const { user, book } = req.body;

@@ -19,24 +19,23 @@ const router = express.Router();
 //     });
 // });
 
-router.get('/', async(req, res) => {
+router.get('/', async(req, res, next) => {
     try{
         const authors = await AuthorModel.find({}).populate('author');
-        res.json(authors);
+        if(!authors) next("authors not found")
+        else res.json(authors);
     }catch(err){
-        return res.status(404).send({message : "whoops... we can't display authors something wrong."});
+        next("whoops... we can't display authors something wrong.");
     }
 });
 
-router.get('/:id', async(req, res) => {
+router.get('/:id', async(req, res, next) => {
     try{
         const author = await AuthorModel.findById(req.params.id);
-        res.json({
-            message: "author page",
-            data: author
-        });
+        if(!author) next("author not found")
+        else res.json(author);
     }catch(err){
-        return res.status(404).send({message : "whoops... something wrong."});
+        next("whoops... something wrong.");
     }
 });
 
