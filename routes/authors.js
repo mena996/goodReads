@@ -22,7 +22,7 @@ const router = express.Router();
 router.get('/', async(req, res) => {
     try{
         const authors = await AuthorModel.find({}).populate('author');
-        res.json(authors);
+            res.json(authors);
     }catch(err){
         return res.status(404).send({message : "whoops... we can't display authors something wrong."});
     }
@@ -43,9 +43,9 @@ router.get('/:id', async(req, res) => {
 
 // without hook
 router.get('/:id/books', (req, res, next) => {
-    return BookModel.find({}).populate('author').where('author').equals(req.params.id).exec((err, books) => {
+    return BookModel.find({}).populate('author').populate('category').where('author').equals(req.params.id).exec((err, books) => {
         if (err) next(err);
-        res.json(books);
+        else res.json(books);
     });
 });
 

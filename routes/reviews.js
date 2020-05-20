@@ -2,29 +2,40 @@ const express = require('express');
 const reviewModel = require('../models/reviewbooks');
 const router = express.Router();
 
-// get all review test 
-router.get('/', (req, res, next) => {
-    return reviewModel.find({}).populate('book').populate('user').exec((err, review) => {
-        if (err) next(err);
-        res.json(review);
-    });
-});
+// // get all review test 
+// router.get('/', (req, res, next) => {
+//     return reviewModel.find({}).populate('book').populate('user').exec((err, review) => {
+//         if (err) next(err);
+//         else res.json(review);
+//     });
+// });
 
-
-//get user review 
+//get specific book review 
 router.get('/:id', (req, res, next) => {
-    return reviewModel.findById(req.params.id).populate('user').populate('book').exec((err, review) => {
+    const data = reviewModel.find().populate('user').where('book').equals(req.params.id).exec((err, review) => {
         if (err) next(err);
-        res.json(review);
+        else res.json(review);
     });
+    return data
 });
 
 
 //new review
 router.post('/', (req, res, next) => {
-    reviewModel.create(req.body, (err, doc) => {
+    const { review, user, book } = req.body;
+    reviewModel.create({
+        review,
+        user,
+        book
+    }, (err, review) => {
         if (err) next(err);
-        res.json(doc);
+        
+        else {
+            reviewModel.findById(review._id).populate('user').exec((err,rev)=>{
+                if (err) next(err);
+                else res.json(rev);
+            })
+        }
     })
 });
 
@@ -38,16 +49,16 @@ router.patch('/:id', (req, res, next) => {
     {new: true , runValidators: true},
     (err,review)=>{
         if(err) next(err);
-        res.json(review)
+        else res.json(review)
     })
 });
 
 
 //delete review
 router.delete('/:id', (req, res, next) => {
-    return reviewModel.findByIdAndDelete(req.params.id, (err, reviews) => {
+    return reviewModel.findByIdAndDelete(req.params.id,(err, reviews) => {
         if (err) next(err);
-        res.json(reviews);
+        else res.json(reviews);
     });
 });
 
