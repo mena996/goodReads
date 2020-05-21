@@ -27,11 +27,7 @@ app.use(express.json());
 app.use((req,res,next) => {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-<<<<<<< HEAD
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, DELETE');
-=======
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
->>>>>>> cb0027687949dbed0360b922dbac6422cbee2d9d
     next();
 });
 
