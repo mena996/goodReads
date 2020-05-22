@@ -1,7 +1,8 @@
 const express = require('express');
 const AuthorModel = require('../models/authors');
 const BookModel = require('../models/books');
-
+const auth = require('./auth');
+const multer = require('./multer');
 const router = express.Router();
 
 // router.get('/', (req, res, next) => {
@@ -50,14 +51,15 @@ router.get('/:id/books', (req, res, next) => {
 });
 
 
-router.post('/', async(req, res, next) => {
+router.post('/', auth.shouldBe('admin'), multer.upload.single('image'), async(req, res, next) => {
+    const url = req.protocol + '://' + req.get('host');
     try {
-        const { firstName, lastName, birthDate, image, books } = req.body;
+        const { firstName, lastName, birthDate, books } = req.body;
         const author = await AuthorModel.create({
             firstName,
             lastName,
             birthDate,
-            image,
+            image: url + '/public/' + req.file.filename,
             books
         });
         res.send(author)
@@ -65,7 +67,9 @@ router.post('/', async(req, res, next) => {
         next("Erorr while adding a author");
     }
 });
-router.patch('/:id', async(req, res, next) => {
+router.patch('/:id', auth.shouldBe('admin'), multer.upload.single('image'), async(req, res, next) => {  
+    const url = req.protocol + '://' + req.get('host');
+    if(req.file) req.body.image = url + '/public/' + req.file.filename;
     try {
         const author = await AuthorModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         if (!author) next("author not found");
@@ -74,7 +78,7 @@ router.patch('/:id', async(req, res, next) => {
         next("Error in editing author")
     }
 });
-router.delete('/:id', async(req, res, next) => {
+router.delete('/:id', auth.shouldBe('admin'), async(req, res, next) => {
     try {
         const author = await AuthorModel.findByIdAndDelete(req.params.id);
         if (!author) next("author not found");

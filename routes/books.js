@@ -3,6 +3,8 @@ const BookModel = require('../models/books');
 const RateBookModel = require('../models/ratebooks');
 const ShelvBookModel = require('../models/shelvbooks');
 const router = express.Router();
+const auth = require('./auth');
+const multer = require('./multer');
 
 // router.get('/', (req, res, next) => {
 //     // return BookModel.find({}).populate('book_id','name', 'image', 'category', 'author').exec((err, posts) => {
@@ -45,12 +47,13 @@ router.get('/:id', async(req, res, next)=>{
 //     });
 // });
 
-router.post('/', async(req, res, next) => {
+router.post('/', auth.shouldBe('admin'), multer.upload.single('image'), async(req, res, next) => {
+    const url = req.protocol + '://' + req.get('host');
     try {
-        const { name, image, category, author } = req.body;
+        const { name, category, author } = req.body;
         const book = await BookModel.create({
             name,
-            image,
+            image: url + '/public/' + req.file.filename,
             category,
             author
         });
@@ -60,7 +63,9 @@ router.post('/', async(req, res, next) => {
     }
 });
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', auth.shouldBe('admin'), multer.upload.single('image'), async (req, res, next) => {
+    const url = req.protocol + '://' + req.get('host');
+    if(req.file) req.body.image = url + '/public/' + req.file.filename;
     try {
         const book = await BookModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         if (!book) next("book not found");
@@ -70,7 +75,7 @@ router.patch('/:id', async (req, res, next) => {
     }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', auth.shouldBe('admin'), async (req, res, next) => {
     try {
         const book = await BookModel.findByIdAndDelete(req.params.id);
         if (!book) next("book not found");

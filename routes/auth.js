@@ -9,7 +9,7 @@ const logIn = async (req, res) => {
     if (!user) return res.sendStatus(404);
     try {
         if (await bcrypt.compare(password,user.password)){
-            const {password,_id,__v,isadmin,...userData} = user._doc
+            const {password,_id,__v,...userData} = user._doc
             const accessToken = generateAccessToken(userData);
             const refreshToken = generateRefreshToken(userData);
             await RefreshTokens.create({ token: refreshToken });
@@ -44,16 +44,32 @@ const regenerateAccessToken = async (req, res) => {
 }
 
 const authenticateToken = (req,res,next) => {
-    // const authHeader = req.headers['authorization'];
-    // const token = authHeader && authHeader.split(' ')[1];
     const {body:{token}} = req
     if (!token) return res.status(401).send();
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.status(403).send();
         req.user = user;
         res.json(user)
-        // next(user);
     })
+}
+
+const shouldBe = (role) => {
+    return (req, res, next) => {
+        if (typeof req.headers.authorization !== "undefined") {
+            let token = req.headers.authorization.split(" ")[1];
+            jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, userData) => {
+                if (err) {  
+                res.status(443).json({ error: "Not Authorized" });
+                throw new Error("Not Authorized");
+                }
+                if (role === 'admin') userData.user.isadmin ? next() : res.status(403).json({ error: "Not Authorized" });
+                else next();
+            });
+        } else {
+            res.status(443).json({ error: "Not Authorized" });
+            throw new Error("Not Authorized");
+        }
+    }
 }
 
 const logOut = async (req, res) => {
@@ -77,5 +93,6 @@ module.exports = {
     logIn,
     authenticateToken,
     regenerateAccessToken,
+    shouldBe,
     logOut,
 }

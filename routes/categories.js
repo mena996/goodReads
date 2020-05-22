@@ -2,6 +2,7 @@ const express = require('express');
 const CategoryModel = require('../models/categories');
 const BookModel = require('../models/books')
 const router = express.Router();
+const auth = require('./auth')
 // const express = require('express');
 // const categoryModel = require('../models/categories')
 
@@ -45,7 +46,7 @@ router.get('/:id/books', (req, res) => {
 
 
 
-router.post('/', async(req, res, next) => {
+router.post('/', auth.shouldBe('admin'),  async(req, res, next) => {
     try {
         const { name } = req.body;
         const category = await CategoryModel.create({
@@ -56,7 +57,7 @@ router.post('/', async(req, res, next) => {
         next("Erorr while adding a category");
     }
 });
-router.patch('/:id', async(req, res, next) => {
+router.patch('/:id', auth.shouldBe('admin'), async(req, res, next) => {
     try {
         const category = await CategoryModel.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
         if (!category) next("category not found");
@@ -65,7 +66,7 @@ router.patch('/:id', async(req, res, next) => {
         next("Error in editing category")
     }
 });
-router.delete('/:id', async(req, res, next) => {
+router.delete('/:id', auth.shouldBe('admin'), async(req, res, next) => {
     try {
         const category = await CategoryModel.findByIdAndDelete(req.params.id);
         if (!category) next("category not found");

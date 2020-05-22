@@ -23,10 +23,11 @@ mongoose.connect('mongodb://localhost:27017/goodReads', {
 
 
 mongoose.set('useFindAndModify', false);
-app.use(express.json());
+app.use(express.json({limit: '5mb'}));
+app.use('/public', express.static('public'));
 app.use((req,res,next) => {
     res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Authorization, Accept");
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, DELETE');
     next();
 });
