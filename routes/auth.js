@@ -9,7 +9,7 @@ const logIn = async (req, res) => {
     if (!user) return res.sendStatus(404);
     try {
         if (await bcrypt.compare(password,user.password)){
-            const {password,_id,__v,...userData} = user._doc
+            const {password,__v,...userData} = user._doc
             const accessToken = generateAccessToken(userData);
             const refreshToken = generateRefreshToken(userData);
             await RefreshTokens.create({ token: refreshToken });
