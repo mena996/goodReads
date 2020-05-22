@@ -49,7 +49,12 @@ router.patch('/:id', (req, res, next) => {
     {new: true , runValidators: true},
     (err,review)=>{
         if(err) next(err);
-        else res.json(review)
+        else {
+            reviewModel.findById(review._id).populate('user').exec((err,rev)=>{
+                if (err) next(err);
+                else res.json(rev);
+            })
+        }
     })
 });
 
