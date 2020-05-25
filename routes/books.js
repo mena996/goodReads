@@ -125,7 +125,7 @@ router.get('/', async (req, res, next) => {
                     populate: {
                         path: 'author'
                     }
-                });
+                }).where("user").equals(req.params.id);
                 res.send(books);
             } catch (err) {
                 next(err);
