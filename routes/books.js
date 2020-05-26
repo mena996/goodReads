@@ -214,7 +214,7 @@ router.get('/', async (req, res, next) => {
             });
             
             router.use((err, req, res, next) => {
-                res.send("oh no there is some thing wrong happend :( \n" + err);
+                res.status(500).send("oh no there is some thing wrong happend :( \n" + err);
             });
             
 module.exports = router;
