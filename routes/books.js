@@ -98,9 +98,9 @@ router.get('/', async (req, res, next) => {
             }
         });
         
-        router.get('/rate', async (req, res, next) => {
+        router.get('/rate/:user/:book', async (req, res, next) => {
             try {
-                const { user, book } = req.body;
+                const { user, book } = req.params;
                 bookState = await RateBookModel.find({ user, book });
                 res.send(bookState)
             } catch (err) {
@@ -108,9 +108,9 @@ router.get('/', async (req, res, next) => {
             }
         });
         
-        router.get('/shelf', async (req, res, next) => {
+        router.get('/shelf/:user/:book', async (req, res, next) => {
             try {
-                const { user, book } = req.body;
+                const { user, book } = req.params;
                 bookState = await ShelvBookModel.find({ user, book });
                 res.send(bookState)
             } catch (err) {
