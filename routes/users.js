@@ -58,9 +58,9 @@ const router = express.Router();
 
 
 router.post('/', (req, res) => {
-    const { body: { firstName, lastName, username, email, password, image } } = req;
+    const { body: { firstName, lastName, username, email, password } } = req;
     const user = new UserModel({
-        firstName, lastName, username, email, password, image, isadmin: 0
+        firstName, lastName, username, email, password, isadmin: 0
     })
     user.save((err) => {
         if (err) {
