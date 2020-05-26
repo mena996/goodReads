@@ -216,5 +216,27 @@ router.get('/', async (req, res, next) => {
             router.use((err, req, res, next) => {
                 res.send("oh no there is some thing wrong happend :( \n" + err);
             });
+    
+            //specific book
+            router.get('/rate/:id', async (req, res, next) => {
+                try {
+                    rate = await RateBookModel.aggregate(
+                        [
+                            {
+                                $group:
+                                {
+                                    _id:"$book" ,
+                                    rate: { $avg:"$rate" } ,
+                                    count: {$sum: 1}
+                                }
+                            }
+                        ]
+                    )
+                const book = rate.find(book=> book._id == req.params.id)        
+                res.send(book? book:{rate:0,count:0})
+                } catch (err) {
+                    next(err);
+                }
+            });
             
 module.exports = router;
